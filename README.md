@@ -28,5 +28,5 @@ A keyword argument `skip_identity` (default, `true`) can be toggled to `false` t
 
 [ci-status-img]: https://github.com/thchr/GellMannMatrices.jl/actions/workflows/CI.yml/badge.svg?branch=main
 [ci-status-url]: https://github.com/thchr/GellMannMatrices.jl/actions/workflows/CI.yml?query=branch%3Amain
-[coverage-img]:  https://codecov.io/gh/thchr/GellMannMatrices.jl/branch/master/graph/badge.svg
+[coverage-img]:  https://codecov.io/gh/thchr/GellMannMatrices.jl/branch/main/graph/badge.svg
 [coverage-url]:  https://codecov.io/gh/thchr/GellMannMatrices.jl
