@@ -38,4 +38,10 @@ using Test
             end
         end
     end
+
+    # errors
+    @test_throws DomainError gellmann(0)
+    @test_throws DomainError gellmann(Matrix{Float64}, 3)
+    @test_throws DomainError GellMannMatrices.diag_gellmann(Matrix{ComplexF64}, 3, 2)
+    @test_throws DomainError GellMannMatrices.offdiag_gellmann(Matrix{ComplexF64}, 3, 3, 3)
 end

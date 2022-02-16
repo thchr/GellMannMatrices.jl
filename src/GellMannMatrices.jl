@@ -8,9 +8,7 @@ export gellmann
 # to ensure type-stability of `cat(..., dims=(1,2))`
 # ... we probably shouldn't do this, piracy and all that :(
 function Base.dims2cat(::Val{dims}) where dims
-    if any(≤(0), dims)
-        throw(ArgumentError("All cat dimensions must be positive integers, but got $dims"))
-    end
+    any(≤(0), dims) && throw(ArgumentError("All cat dimensions must be positive integers, but got $dims"))
     ntuple(in(dims), maximum(dims))
 end
 
@@ -39,10 +37,6 @@ end
 
 # "diagonal"-like matrices (h_i on Wiki)
 function diag_gellmann(T::Type{<:AbstractMatrix}, i, d)
-    if d == 0
-        return T <: SparseMatrixCSC ? spzeros(eltype(T), 0, 0) :
-               T <: AbstractMatrix ?  zeros(eltype(T), 0, 0)   : error()
-    end
     if i == 1
         T(I(d))
     elseif i < d
@@ -50,7 +44,7 @@ function diag_gellmann(T::Type{<:AbstractMatrix}, i, d)
     elseif i == d
         sqrt(2/(d*(d-1))) * (T(I(d-1)) ⊕ convert(eltype(T), (1-d)))
     else
-        error()
+        throw(DomainError((i,d), "invalid combination of (i,d); must have i ≤ d and d ≥ 1"))
     end
 end
 
@@ -79,6 +73,7 @@ julia> Λᵢ = gellmann(3)
 gellmann(d::Integer; kwargs...) = gellmann(Matrix{ComplexF64}, d; kwargs...)
 
 function gellmann(T::Type{<:AbstractMatrix}, d::Integer; skip_identity=true)
+    d > 0 || throw(DomainError(d, "dimension must be a positive integer"))
     eltype(T) == complex(eltype(T)) || throw(DomainError(T, "the element type of T must be complex"))
     # we collect the matrices in the slightly odd-looking manner below in order to be
     # consistent with the conventional number of Pauli and Gell-Mann matrices.
