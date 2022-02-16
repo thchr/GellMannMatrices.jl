@@ -1,6 +1,6 @@
 # GellMannMatrices
 
-[![Build Status](https://github.com/thchr/GellMannMatrices.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/thchr/GellMannMatrices.jl/actions/workflows/CI.yml?query=branch%3Amain)
+[![Build status][ci-status-img]][ci-status-url] [![Coverage][coverage-img]][coverage-url]
 
 A Julia package to compute the [generalized Gell-Mann matrices](https://en.wikipedia.org/wiki/Generalizations_of_Pauli_matrices#Generalized_Gell-Mann_matrices_(Hermitian)) in `d` dimensions.
 
@@ -25,3 +25,8 @@ julia> gellmann(3) # Standard Gell-Mann matrices
  [...]
 ```
 A keyword argument `skip_identity` (default, `true`) can be toggled to `false` to include the identity matrix.
+
+[ci-status-img]: https://github.com/thchr/GellMannMatrices.jl/actions/workflows/CI.yml/badge.svg?branch=main
+[ci-status-url]: https://github.com/thchr/GellMannMatrices.jl/actions/workflows/CI.yml?query=branch%3Amain
+[coverage-img]:  https://codecov.io/gh/thchr/GellMannMatrices.jl/branch/master/graph/badge.svg
+[coverage-url]:  https://codecov.io/gh/thchr/GellMannMatrices.jl
