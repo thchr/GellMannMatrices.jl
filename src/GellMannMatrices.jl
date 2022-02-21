@@ -31,13 +31,13 @@ function offdiag_gellmann(T::Type{<:AbstractMatrix}, i, j, d)
 end
 
 # "diagonal"-like matrices (h_i on Wiki)
-function diag_gellmann(T::Type{<:AbstractMatrix}, i, d)
+function diag_gellmann(T::Type{<:AbstractMatrix}, i, d; norm_identity::Bool=false)
     if i == 1
-        T(I(d))
+        return norm_identity ? T(I(d) / sqrt(d/2)) : T(I(d))
     elseif i < d
-        diag_gellmann(T, i, d-1) ⊕ zero(eltype(T))
+        return diag_gellmann(T, i, d-1) ⊕ zero(eltype(T))
     elseif i == d
-        sqrt(2/(d*(d-1))) * (T(I(d-1)) ⊕ convert(eltype(T), (1-d)))
+        return sqrt(2/(d*(d-1))) * (T(I(d-1)) ⊕ convert(eltype(T), (1-d)))
     else
         throw(DomainError((i,d), "invalid combination of (i,d); must have i ≤ d and d ≥ 1"))
     end
@@ -55,8 +55,10 @@ Return the generalized Gell-Mann matrices in `d` dimensions as a vector of matri
 point element type.
 
 ## Keyword arguments
-- `skip_identity` (default, `false`): if `true`, the identity matrix of dimension `d` is
-included as the last element of the returned vector.
+- `skip_identity` (default, `true`): if `false`, the identity matrix of dimension `d` is
+  included as the last element of the returned vector.
+- `norm_identity` (default, `false`): if `true`, the elements of the identity are normalized
+   by `sqrt(D/2)` to ensure the the orthogonality relation `tr(A'*A) = 2`.
 
 ## Examples
 Compute the Pauli matrices ``σ_i`` (`d=2`) and Gell-Mann matrices ``Λ_i`` (`d=3`):
@@ -67,7 +69,8 @@ julia> Λᵢ = gellmann(3)
 """
 gellmann(d::Integer; kwargs...) = gellmann(Matrix{ComplexF64}, d; kwargs...)
 
-function gellmann(T::Type{<:AbstractMatrix}, d::Integer; skip_identity=true)
+function gellmann(T::Type{<:AbstractMatrix}, d::Integer; 
+                  skip_identity=true, norm_identity=false)
     d > 0 || throw(DomainError(d, "dimension must be a positive integer"))
     eltype(T) == complex(eltype(T)) || throw(DomainError(T, "the element type of T must be complex"))
     # we collect the matrices in the slightly odd-looking manner below in order to be
@@ -81,7 +84,7 @@ function gellmann(T::Type{<:AbstractMatrix}, d::Integer; skip_identity=true)
         end
         ms[k+=1] = diag_gellmann(T, i, d)
     end
-    skip_identity || (ms[k+=1] = diag_gellmann(T, 1, d))
+    skip_identity || (ms[k+=1] = diag_gellmann(T, 1, d; norm_identity))
     return ms
 end
 

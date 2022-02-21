@@ -25,10 +25,12 @@ using Test
 
     # hermicity, tracelessness, & orthogonality
     for d in 1:3
-        ms = gellmann(d)
+        ms = gellmann(d, skip_identity=false, norm_identity=true)
         for (i,mᵢ) in enumerate(ms)
             @test mᵢ ≈ mᵢ'
-            @test norm(tr(mᵢ)) < 1e-12
+            if i ≠ d*d
+                @test norm(tr(mᵢ)) < 1e-12
+            end
             for (j,mⱼ) in enumerate(ms)
                 if i == j
                     @test abs(tr(mᵢ'*mᵢ)) ≈ 2 # Frobenius matrix norm
