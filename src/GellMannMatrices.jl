@@ -4,18 +4,13 @@ using LinearAlgebra, SparseArrays
 export gellmann
 
 # ---------------------------------------------------------------------------------------- #
-# until we have https://github.com/JuliaLang/julia/pull/44211, we need to extend `dims2cat`
-# to ensure type-stability of `cat(..., dims=(1,2))`
-# ... we probably shouldn't do this, piracy and all that :(
-function Base.dims2cat(::Val{dims}) where dims
-    any(≤(0), dims) && throw(ArgumentError("All cat dimensions must be positive integers, but got $dims"))
-    ntuple(in(dims), maximum(dims))
-end
-
-# ---------------------------------------------------------------------------------------- #
-
 # direct sum (i.e., block-diagonalization of matrices As)
-@inline ⊕(As...) = cat(As..., dims=Val((1,2)))
+if VERSION < v"1.8"
+    # work around for https://github.com/JuliaLang/julia/pull/44211 for Julia ≤ v1.7
+    @inline ⊕(As...) = cat(As..., dims=(1,2))::typeof((.+)(As...))
+else
+    @inline ⊕(As...) = cat(As..., dims=Val((1,2)))
+end
 
 # https://en.wikipedia.org/wiki/Matrix_unit
 unit(::Type{<:SparseMatrixCSC}, i, j, n, m) = sparse([i], [j], [1], n, m)
