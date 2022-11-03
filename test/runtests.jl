@@ -25,7 +25,7 @@ using Test
 
     # hermicity, tracelessness, & orthogonality
     for d in 1:3
-        ms = gellmann(d, skip_identity=false, norm_identity=true)
+        ms = gellmann(d, skip_identity=false, normalize=true)
         for (i,mᵢ) in enumerate(ms)
             @test mᵢ ≈ mᵢ'
             if i ≠ d*d
