@@ -16,12 +16,21 @@ using Test
     @test (@inferred gellmann(2; skip_identity=false)) ≈ [σᵢ..., [1 0; 0 1]]
 
     # Gell-Mann matrices (d=3)
-    Λᵢ = [[0 1 0; 1 0 0; 0 0 0], [0 -1im 0; 1im 0 0; 0 0 0], [1 0 0; 0 -1 0; 0 0 0],
-          [0 0 1; 0 0 0; 1 0 0], [0 0 -1im; 0 0 0; 1im 0 0], [0 0 0; 0 0 1; 0 1 0],
-          [0 0 0; 0 0 -1im; 0 1im 0], [1 0 0; 0 1 0; 0 0 -2]/√3]
-    @test (@inferred gellmann(3)) ≈ Λᵢ
-    @test (@inferred gellmann(SparseMatrixCSC{ComplexF64, Int}, 3)) ≈ Λᵢ
-    @test (@inferred gellmann(3; skip_identity=false)) ≈ [Λᵢ..., [1 0 0; 0 1 0; 0 0 1]]
+    Λᵢ = Matrix{ComplexF64}[
+            [0 1 0; 1 0 0; 0 0 0], [0 -1im 0; 1im 0 0; 0 0 0], [1 0 0; 0 -1 0; 0 0 0],
+            [0 0 1; 0 0 0; 1 0 0], [0 0 -1im; 0 0 0; 1im 0 0], [0 0 0; 0 0 1; 0 1 0],
+            [0 0 0; 0 0 -1im; 0 1im 0], [1 0 0; 0 1 0; 0 0 -2]/√3] # `normalize = true`
+    Λᵢ′ = push!(Λᵢ[1:end-1], ComplexF64[1.0 0 0; 0 1 0; 0 0 -2])   # `normalize = false`
+
+    @test (@inferred gellmann(3; normalize=true)) ≈ Λᵢ  # `normalize = true`
+    @test (@inferred gellmann(SparseMatrixCSC{ComplexF64, Int}, 3; normalize=true)) ≈ Λᵢ
+    @test ((@inferred gellmann(3; skip_identity=false, normalize=true))
+                        ≈ push!(copy(Λᵢ), ComplexF64[√(2/3) 0 0; 0 √(2/3) 0; 0 0 √(2/3)]))
+
+    @test (@inferred gellmann(3)) ≈ Λᵢ′                 # `normalize = false`
+    @test (@inferred gellmann(SparseMatrixCSC{ComplexF64, Int}, 3)) ≈ Λᵢ′
+    @test ((@inferred gellmann(3; skip_identity=false)) 
+                                        ≈ push!(copy(Λᵢ′), ComplexF64[1 0 0; 0 1 0; 0 0 1]))
 
     # hermicity, tracelessness, & orthogonality
     for d in 1:3
