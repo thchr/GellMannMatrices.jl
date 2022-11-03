@@ -73,7 +73,7 @@ julia> Λᵢ = gellmann(3)
 gellmann(d::Integer; kwargs...) = gellmann(Matrix{ComplexF64}, d; kwargs...)
 
 function gellmann(T::Type{<:AbstractMatrix}, d::Integer; 
-                  skip_identity=true, normalize=false)
+                  skip_identity::Bool=true, normalize::Bool=false)
     d > 0 || throw(DomainError(d, "dimension must be a positive integer"))
     eltype(T) == complex(eltype(T)) || throw(DomainError(T, "the element type of T must be complex"))
     # we collect the matrices in the slightly odd-looking manner below in order to be
@@ -85,7 +85,7 @@ function gellmann(T::Type{<:AbstractMatrix}, d::Integer;
             ms[k+=1] = offdiag_gellmann(T, j, i, d)
             ms[k+=1] = offdiag_gellmann(T, i, j, d)
         end
-        ms[k+=1] = diag_gellmann(T, i, d)
+        ms[k+=1] = diag_gellmann(T, i, d; normalize)
     end
     skip_identity || (ms[k+=1] = diag_gellmann(T, 1, d; normalize))
     return ms
