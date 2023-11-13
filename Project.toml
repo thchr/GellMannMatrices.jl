@@ -1,7 +1,7 @@
 name = "GellMannMatrices"
 uuid = "ab9ec009-2876-46ab-95e9-a984e5637243"
 authors = ["Thomas Christensen <tchr@mit.edu> and contributors"]
-version = "0.2.0"
+version = "0.2.1"
 
 [deps]
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
