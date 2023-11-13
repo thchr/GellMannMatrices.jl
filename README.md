@@ -24,7 +24,9 @@ julia> gellmann(3) # Standard Gell-Mann matrices
  [0.0 + 0.0im 0.0 - 1.0im 0.0 + 0.0im; 0.0 + 1.0im 0.0 + 0.0im 0.0 + 0.0im; 0.0 + 0.0im 0.0 + 0.0im 0.0 + 0.0im]
  [...]
 ```
-A keyword argument `skip_identity` (default, `true`) can be toggled to `false` to include the identity matrix.
+**Keyword arguments:**
+- `skip_identity` (default, `true`): toggle to `false` to include the identity matrix.
+- `normalize` (default, `false`): toggle to `true` to guarantee a fixed (Frobenius) normalization prefactor of 2, in the sense $\mathrm{Tr}(M_i^\dagger M_j) = 2\delta_{ij}$. If `false`, matrix elements are chosen to be small integers, leaving the normalization prefactor matrix-dependent.
 
 [ci-status-img]: https://github.com/thchr/GellMannMatrices.jl/actions/workflows/CI.yml/badge.svg?branch=main
 [ci-status-url]: https://github.com/thchr/GellMannMatrices.jl/actions/workflows/CI.yml?query=branch%3Amain
