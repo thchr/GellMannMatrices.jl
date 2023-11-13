@@ -35,7 +35,7 @@ function diag_gellmann(T::Type{<:AbstractMatrix}, i, d; normalize::Bool=false)
     if i == 1
         return normalize ? T(I(d) / sqrt(d/2)) : T(I(d))
     elseif i < d
-        return diag_gellmann(T, i, d-1) ⊕ zero(eltype(T))
+        return diag_gellmann(T, i, d-1; normalize) ⊕ zero(eltype(T))
     elseif i == d
         n = normalize ? sqrt(2/(d*(d-1))) : 1.0
         return n * (T(I(d-1)) ⊕ convert(eltype(T), (1-d)))
@@ -81,7 +81,7 @@ function gellmann(T::Type{<:AbstractMatrix}, d::Integer;
     ms = Vector{T}(undef, d*d - skip_identity)
     k = 0
     for i in 2:d
-        for  j in 1:i-1
+        for j in 1:i-1
             ms[k+=1] = offdiag_gellmann(T, j, i, d)
             ms[k+=1] = offdiag_gellmann(T, i, j, d)
         end

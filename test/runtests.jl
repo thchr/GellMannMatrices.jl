@@ -33,8 +33,8 @@ using Test
                                         ≈ push!(copy(Λᵢ′), ComplexF64[1 0 0; 0 1 0; 0 0 1]))
 
     # hermicity, tracelessness, & orthogonality
-    for d in 1:3
-        ms = gellmann(d, skip_identity=false, normalize=true)
+    for d in 1:6
+        ms = gellmann(d; skip_identity=false, normalize=true)
         for (i,mᵢ) in enumerate(ms)
             @test mᵢ ≈ mᵢ'
             if i ≠ d*d
